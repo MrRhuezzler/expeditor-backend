@@ -1,79 +1,57 @@
-require('dotenv').config()
-const express = require('express')
-const mongoose = require('mongoose')
-const cors = require('cors')
-const app = express()
-const port = 5000
-const url = process.env.MONGODB_URL
+require("dotenv").config();
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const { Target } = require("./models");
+const app = express();
+const port = 5000;
+const url = process.env.MONGODB_URL;
 
 app.use(
   cors({
-    origin: '*',
+    origin: "*",
     credentials: true,
   })
 );
 
 app.use(express.json());
-app.use(express.urlencoded())
+app.use(express.urlencoded({ extended: true }));
 
-let test = [];
-
-// get reference to database
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
+db.on("error", console.error.bind(console, "connection error:"));
 
-db.once('open', function () {
+db.once("open", () => {
   console.log("Connection Successful!");
-})
-
-const schema = mongoose.Schema
-
-const NavigationSchema = schema({
-  Place: String,
-  xcoord: Number,
-  ycoord: { type: Number, default: 0 },
-  zcoord: Number,
-  Description: { type: String, default: "" }
 });
 
-const NavigationModel = mongoose.model("NavigationModel", NavigationSchema);
-
-//const nav1 = new NavigationModel({ Place: "CSL1", xcoord: 32.5, ycoord: 42.6, zcoord: 87.9, Description: 'Lab 1' });
-
-app.get('/', function (req, res) {
-  res.send({ 'message': "Hello, from Expeditor" });
+app.get("/", function (req, res) {
+  res.status(201).send("Hello from Expeditor");
 });
 
+app.post("/target", function (req, res) {
+  const target = new Target({ ...req.body });
 
-app.post('/place', function (req, res) {
-  const newData = new NavigationModel({
-    Place: req.body.place,
-    xcoord: req.body.xcoord,
-    ycoord: req.body.ycoord,
-    zcoord: req.body.zcoord,
-    Description: req.body.desc
-  });
-  newData.save((err) => {
-    if (err) res.send({ "message": "error" })
-    else res.send(newData);
+  target.save((err) => {
+    if (err) res.status(401).json({ message: "error" });
+    else res.status(201).json(target);
   });
 });
 
-app.get('/place/:id', function (req, res) {
-  NavigationModel.find({ _id: req.params.id }, (err, coordinates) => {
-    if (err) res.send({ "message": "error" })
-    else res.send(coordinates);
-  })
-})
+app.get("/target/:id", function (req, res) {
+  Target.find({ _id: req.params.id }, (err, target) => {
+    if (err) res.status(404).json({ message: "error" });
+    else res.status(200).send(target);
+  });
+});
 
-app.get('/places', function (req, res) {
-  NavigationModel.find((err, places) => {
-    if (err) res.send([])
-    else res.send(places);
-  })
-})
+app.get("/target", function (req, res) {
+  Target.find((err, targets) => {
+    if (err) res.status(401).send([]);
+    else res.status(200).send(targets);
+  });
+});
 
 app.listen(port, async () => {
   mongoose.connect(url);
-  console.log(`Application listening on port ${port}`)
-})
+  console.log(`Application listening on port ${port}`);
+});

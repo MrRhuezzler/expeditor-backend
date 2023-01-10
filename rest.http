@@ -1,0 +1,15 @@
+GET http://localhost:5000/target
+
+
+###
+POST http://localhost:5000/target
+Content-Type: application/json
+
+{
+    "name" : "Lift M Block",
+    "blockName" : "M",
+    "x" : -16.23,
+    "y" : 0,
+    "z" : -15.74,
+    "description" : "The M Block Lift"
+}
