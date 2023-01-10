@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const { Target } = require("./models");
 const app = express();
-const port = 5000;
+const port = process.env.PORT;
 const url = process.env.MONGODB_URL;
 
 app.use(
