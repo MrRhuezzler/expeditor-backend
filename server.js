@@ -41,7 +41,7 @@ const NavigationModel = mongoose.model("NavigationModel", NavigationSchema);
 //const nav1 = new NavigationModel({ Place: "CSL1", xcoord: 32.5, ycoord: 42.6, zcoord: 87.9, Description: 'Lab 1' });
 
 app.get('/', function (req, res) {
-  res.send({ 'message': "error" });
+  res.send({ 'message': "Hello, from Expeditor" });
 });
 
 
