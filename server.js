@@ -46,8 +46,8 @@ app.get("/target/:id", function (req, res) {
 
 app.get("/target", function (req, res) {
   Target.find((err, targets) => {
-    if (err) res.status(401).send([]);
-    else res.status(200).send(targets);
+    if (err) res.status(401).send({ targets: [] });
+    else res.status(200).send({ targets });
   });
 });
 
