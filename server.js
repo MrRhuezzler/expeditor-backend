@@ -38,7 +38,7 @@ app.post("/target", function (req, res) {
 });
 
 app.get("/target/:id", function (req, res) {
-  Target.find({ _id: req.params.id }, (err, target) => {
+  Target.findById({ _id: req.params.id }, (err, target) => {
     if (err) res.status(404).json({ message: "error" });
     else res.status(200).send(target);
   });
